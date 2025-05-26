@@ -4,7 +4,7 @@ node_modules/
 *.vsix
 
 # Coverage reports
-coverage/
+/coverage
 
 # Debug files
 debug*.js
@@ -24,3 +24,6 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# production
+/out
