@@ -1,0 +1,26 @@
+# VS Code Extension specific
+out/
+node_modules/
+*.vsix
+
+# Coverage reports
+coverage/
+
+# Debug files
+debug*.js
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/settings.json
+.idea/
+
+# Temporary files
+*.tmp
+*.temp

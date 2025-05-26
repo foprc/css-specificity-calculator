@@ -2,120 +2,120 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ master, develop ]
+    branches: [master, develop]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [16.x, 18.x]
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Run TypeScript compilation
-      run: npm run compile
-    
-    - name: Run tests
-      run: npm test
-    
-    - name: Run tests with coverage
-      run: npm run test:coverage
-    
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        directory: ./coverage
-        fail_ci_if_error: true
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript compilation
+        run: npm run compile
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./coverage
+          fail_ci_if_error: true
 
   build:
     needs: test
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Use Node.js 18
-      uses: actions/setup-node@v4
-      with:
-        node-version: 18
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Run tests (required before build)
-      run: npm test
-    
-    - name: Build extension
-      run: npm run compile
-    
-    - name: Package extension
-      run: |
-        npm install -g vsce
-        vsce package
-    
-    - name: Upload package artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: vscode-extension
-        path: '*.vsix'
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests (required before build)
+        run: npm test
+
+      - name: Build extension
+        run: npm run compile
+
+      - name: Package extension
+        run: |
+          npm install -g vsce
+          vsce package
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscode-extension
+          path: "*.vsix"
 
   publish:
     needs: [test, build]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Use Node.js 18
-      uses: actions/setup-node@v4
-      with:
-        node-version: 18
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Run full test suite (mandatory before publish)
-      run: |
-        npm test
-        npm run test:coverage
-    
-    - name: Verify test coverage threshold
-      run: |
-        echo "Checking if test coverage meets minimum requirements..."
-        npm run test:coverage -- --passWithNoTests=false
-    
-    - name: Build and package
-      run: |
-        npm run compile
-        npm install -g vsce
-        vsce package
-    
-    - name: Publish to VS Code Marketplace
-      env:
-        VSCE_PAT: ${{ secrets.VSCE_PAT }}
-      run: |
-        if [ -n "$VSCE_PAT" ]; then
-          vsce publish -p $VSCE_PAT
-        else
-          echo "VSCE_PAT not found, skipping publish"
-        fi
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run full test suite (mandatory before publish)
+        run: |
+          npm test
+          npm run test:coverage
+
+      - name: Verify test coverage threshold
+        run: |
+          echo "Checking if test coverage meets minimum requirements..."
+          npm run test:coverage -- --passWithNoTests=false
+
+      - name: Build and package
+        run: |
+          npm run compile
+          npm install -g vsce
+          vsce package
+
+      - name: Publish to VS Code Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          if [ -n "$VSCE_PAT" ]; then
+            vsce publish -p $VSCE_PAT
+          else
+            echo "VSCE_PAT not found, skipping publish"
+          fi

@@ -3,13 +3,14 @@
   "displayName": "CSS Specificity Calculator",
   "description": "Display CSS selector specificity weights",
   "version": "1.0.0",
+  "license": "MIT",
   "publisher": "dorian",
   "author": {
     "name": "Dorian"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dorian/css-specificity-calculator"
+    "url": "https://github.com/foprc/css-specificity-calculator"
   },
   "keywords": [
     "css",
@@ -64,6 +65,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "coverage:serve": "serve -s coverage/lcov-report -p 8080",
     "prepackage": "npm run test"
   },
   "devDependencies": {
