@@ -1,0 +1,15 @@
+/* Test file to verify hint position after opening brace */
+
+.button {
+  background-color: blue;
+}
+
+#main .container {
+  padding: 10px;
+}
+
+.header .nav .item:hover {
+  color: red;
+}
+
+/* Hints should appear AFTER the { not before */

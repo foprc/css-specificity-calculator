@@ -1,0 +1,83 @@
+/* Test CSS specificity calculation */
+
+/* Basic tests */
+.button {
+  background-color: gray;
+}
+
+.container .button {
+  background-color: blue;
+}
+
+#sidebar .button {
+  background-color: green;
+}
+
+#main .container .button.active {
+  background-color: red;
+}
+
+/* Complex selector tests */
+div > p + span[data-role="tooltip"]:hover::before {
+  content: "Complex selector test";
+}
+
+/* :not() pseudo-class tests */
+.nav-item:not(.disabled) {
+  color: black;
+}
+
+.nav-item:not(#special):not(.hidden) {
+  opacity: 1;
+}
+
+/* Pseudo-class and pseudo-element tests */
+body .header .nav .item:nth-child(2n+1) {
+  margin: 10px;
+}
+
+a:hover:focus {
+  text-decoration: underline;
+}
+
+p::first-line::first-letter {
+  font-size: 2em;
+}
+
+/* Attribute selector tests */
+input[type="text"][required] {
+  border: 1px solid red;
+}
+
+[data-theme="dark"] .button[disabled] {
+  opacity: 0.5;
+}
+
+/* Multiple selector cases */
+.btn, #special-btn, div.container {
+  padding: 5px;
+}
+
+/* Combinator tests */
+.parent > .child + .sibling ~ .general {
+  display: flex;
+}
+
+/* ID and class combinations */
+#header .nav-menu .item.active:hover {
+  color: #007acc;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+  
+  #mobile-menu .item {
+    font-size: 14px;
+  }
+  
+  .container .mobile-nav:not(.collapsed) {
+    height: auto;
+  }
+}
